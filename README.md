@@ -17,7 +17,7 @@ mavg.py --help
 The program uses input data from [1], [2], and optionally [3]. Check the OFILE and IFILE dictionaries for the default locations of the input and output json/CSV files.
 
 ## Data Sources
-- [1]: DEMO istat.it (November 2019 data) [ISTAT Italian Population](http://demo.istat.it/bilmens2019gen/index02.html)
+- [1]: DEMO istat.it (November 2019 data) [ISTAT Italian Population](http://demo.istat.it/bilmens2019gen/index02.html). (Source data for the `tavola_bilancio_mensile_2019_*` files.)
 - [2]: [COVID-19 Data](https://github.com/pcm-dpc/COVID-19/)
 - [3]: Optional: area of Italian Province. The `load_area.py` module parses the input coming from [Area](https://github.com/MatteoHenryChinaski/Comuni-Italiani-2018-Sql-Json-excel.git)
 
