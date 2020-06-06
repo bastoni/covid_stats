@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # vim: set fileencoding=utf-8 :
+# Copyright (C) 2020 Andrea Bastoni, License: Apache-2.0, see License file
 
 import argparse
 import sys

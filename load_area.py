@@ -1,4 +1,5 @@
 # vim: set fileencoding=utf-8 :
+# Copyright (C) 2020 Andrea Bastoni, License: Apache-2.0, see License file
 from provincia import *
 
 # Comuni-Italiani-2018-Sql-Json-excel/italy_provincies.json

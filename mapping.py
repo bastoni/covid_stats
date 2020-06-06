@@ -1,4 +1,5 @@
 # vim: set fileencoding=utf-8 :
+# Copyright (C) 2020 Andrea Bastoni, License: Apache-2.0, see License file
 
 # mapping ISTAT province.code - province.name
 # mapping ISTAT provincia Bolzano/Bozen and Trento to regioni P.A. Bolzano/Bozen, P.A. Trento
