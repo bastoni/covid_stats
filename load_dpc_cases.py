@@ -1,6 +1,7 @@
 # vim: set fileencoding=utf-8 :
 from provincia import *
 from regione import *
+from mapping import *
 
 # COVID-19/dati-json/dpc-covid19-ita-province.json
 #[

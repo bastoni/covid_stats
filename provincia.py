@@ -15,9 +15,14 @@ class Provincia(object):
         self.name = name
         self.case_by_date = {} # { date : cases }
         self.avg_pop = {}  # { interval : (avg, max cases) }
+        self.area = 0
+        self.avg_area = {} # { interval : avg }
 
     def add_case(self, date, num):
         self.case_by_date[date] = num
+
+    def add_area(self, area):
+        self.area = float(area)
 
     def __str__(self):
 
@@ -34,9 +39,15 @@ class Provincia(object):
         for k,v in sorted(self.avg_pop.items()):
             avg_pop[k] = v
         d['avg_pop'] = avg_pop
+        if self.avg_area is not {}:
+            d['area'] = self.area
+            aa = {}
+            for k,v in sorted(self.avg_area.items()):
+                aa[k] = v
+            d['avg_area'] = aa
         return d
 
-    def do_avg(self, avg):
+    def do_avg(self, avg, area):
         win = deque([])
         prmax = float(0)
         for d,c in sorted(self.case_by_date.items()):
@@ -53,6 +64,9 @@ class Provincia(object):
                 if (cur > prmax):
                     prmax = cur
                 self.avg_pop[rg] = (cur, m)
+                if area:
+                    cur_a = float(avg_win / self.area)
+                    self.avg_area[rg] = cur_a
                 # print("%s: %s : %s %s %s" % (self.code, rg, avg_win, self.pop, self.avg_pop[rg]))
                 l = win.popleft()
                 win.append([d,c])
@@ -69,5 +83,8 @@ class Provincia(object):
             if (cur > prmax):
                 prmax = cur
             self.avg_pop[rg] = (cur, m)
+            if area:
+                cur_a = float(avg_win / self.area)
+                self.avg_area[rg] = cur_a
 
         return prmax
