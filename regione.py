@@ -13,11 +13,11 @@ class Regione(object):
     def __init__(self, name, pop):
         self.pop = int(pop)
         self.name = name
-        self.case_by_date = {} # { date : cases }
-        self.avg_pop = {}  # { interval : (mavg, cases/pop*100000, max cases) }
+        self.case_by_date = {} # { date : (total cases, active cases) }
+        self.avg_pop = {}  # { interval : (avg new cases x days /pop*100000, avg active cases x days/pop*100000, total cases/pop*100000, max cases) }
 
-    def add_case(self, date, num):
-        self.case_by_date[date] = num
+    def add_case(self, date, tot, active):
+        self.case_by_date[date] = (tot, active)
 
     def __str__(self):
 
@@ -35,38 +35,45 @@ class Regione(object):
         d['avg_pop'] = avg_pop
         return d
 
-    def do_avg(self, avg):
+    def _avg_win(self, win, mavg_a, wsize):
+        rg = "%s - %s" % (win[0][0], win[-1][0])
+        # For the total number of cases
+        # use maximum and minimum seen values in the interval
+        # the data for some province is highly unstable.
+        (lt, _) = min(win, key=lambda x: x[1])[1]
+        (mt, _) = max(win, key=lambda x: x[1])[1]
+        # compute average of _new_ cases
+        avg_win = float(int(mt) - int(lt))/wsize
+        cur = float(avg_win / self.pop) * 100000
+        # store the active cases of the current
+        self.avg_pop[rg] = (cur, (mavg_a/self.pop * 100000), ((mt/self.pop) * 100000), mt)
+        return cur
+
+    def do_avg(self, wsize):
         win = deque([])
         prmax = float(0)
+        mavg_active = float(0)
         for d,c in sorted(self.case_by_date.items()):
-            if len(win) < avg:
+            if len(win) < wsize:
+                (tot, active) = c
+                mavg_active = (mavg_active + active/wsize)
                 win.append([d,c])
             else:
-                rg = "%s - %s" % (win[0][0], win[-1][0])
-                # Use maximum and minimum seen values in the interval
-                # the data for some province is highly unstable.
-                l = min(win, key=lambda x: int(x[1]))[1]
-                m = max(win, key=lambda x: int(x[1]))[1]
-                avg_win = float(int(m) - int(l))/avg
-                cur = float(avg_win / self.pop) * 100000
-                if (cur > prmax):
-                    prmax = cur
-                self.avg_pop[rg] = (cur, ((m/self.pop) * 100000), m)
-                # print("%s: %s : %s %s %s" % (self.code, rg, avg_win, self.pop, self.avg_pop[rg]))
+                _max = self._avg_win(win, mavg_active, wsize)
+                if (_max > prmax):
+                    prmax = _max
+                # for the active cases, we need proper moving average
                 l = win.popleft()
                 win.append([d,c])
+                (_, na) = c
+                (_, oa) = l[1]
+                mavg_active = (mavg_active + na/wsize - oa/wsize)
 
-        if len(win) < avg:
-            print(self.name + " not enough data for avg of " + str(avg) + " elements")
+        if len(win) < wsize:
+            print(self.name + " not enough data for avg of " + str(wsize) + " elements")
         else:
-            # last element
-            rg = "%s - %s" % (win[0][0], win[-1][0])
-            l = min(win, key=lambda x: int(x[1]))[1]
-            m = max(win, key=lambda x: int(x[1]))[1]
-            avg_win = float(int(m) - int(l))/avg
-            cur = float(avg_win / self.pop) * 100000
-            if (cur > prmax):
-                prmax = cur
-            self.avg_pop[rg] = (cur, ((m/self.pop) * 100000), m)
+            _max = self._avg_win(win, mavg_active, wsize)
+            if (_max > prmax):
+                prmax = _max
 
         return prmax

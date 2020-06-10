@@ -48,6 +48,20 @@ class Provincia(object):
             d['avg_area'] = aa
         return d
 
+    def _avg(self, win, wsize, area):
+        rg = "%s - %s" % (win[0][0], win[-1][0])
+        # Use maximum and minimum seen values in the interval
+        # the data for some province is highly unstable.
+        l = min(win, key=lambda x: int(x[1]))[1]
+        m = max(win, key=lambda x: int(x[1]))[1]
+        avg_win = float(int(m) - int(l))/wsize
+        cur = float(avg_win / self.pop) * 100000
+        self.avg_pop[rg] = (cur, ((m/self.pop) * 100000), m)
+        if area:
+            cur_a = float(avg_win / self.area)
+            self.avg_area[rg] = cur_a
+        return cur
+
     def do_avg(self, avg, area):
         win = deque([])
         prmax = float(0)
@@ -55,20 +69,9 @@ class Provincia(object):
             if len(win) < avg:
                 win.append([d,c])
             else:
-                rg = "%s - %s" % (win[0][0], win[-1][0])
-                # Use maximum and minimum seen values in the interval
-                # the data for some province is highly unstable.
-                l = min(win, key=lambda x: int(x[1]))[1]
-                m = max(win, key=lambda x: int(x[1]))[1]
-                avg_win = float(int(m) - int(l))/avg
-                cur = float(avg_win / self.pop) * 100000
-                if (cur > prmax):
-                    prmax = cur
-                self.avg_pop[rg] = (cur, ((m/self.pop) * 100000), m)
-                if area:
-                    cur_a = float(avg_win / self.area)
-                    self.avg_area[rg] = cur_a
-                # print("%s: %s : %s %s %s" % (self.code, rg, avg_win, self.pop, self.avg_pop[rg]))
+                _max = self._avg(win, avg, area)
+                if (_max > prmax):
+                    prmax = _max
                 l = win.popleft()
                 win.append([d,c])
 
@@ -76,16 +79,8 @@ class Provincia(object):
             print("Not enough data for avg of " + avg + " elements")
         else:
             # last element
-            rg = "%s - %s" % (win[0][0], win[-1][0])
-            l = min(win, key=lambda x: int(x[1]))[1]
-            m = max(win, key=lambda x: int(x[1]))[1]
-            avg_win = float(int(m) - int(l))/avg
-            cur = float(avg_win / self.pop) * 100000
-            if (cur > prmax):
-                prmax = cur
-            self.avg_pop[rg] = (cur, ((m/self.pop) * 100000), m)
-            if area:
-                cur_a = float(avg_win / self.area)
-                self.avg_area[rg] = cur_a
+            _max = self._avg(win, avg, area)
+            if (_max > prmax):
+                prmax = _max
 
         return prmax

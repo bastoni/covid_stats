@@ -64,11 +64,11 @@ def load_reg_case(infile, db):
     for r in dpc:
         try:
             reg = db[r['denominazione_regione']]
-            reg.add_case(r['data'], r['totale_casi'])
+            reg.add_case(r['data'], r['totale_casi'], r['totale_positivi'])
         except:
             if (MAP_REG[r['denominazione_regione']] != ""):
                 reg = db[MAP_REG[r['denominazione_regione']]]
-                reg.add_case(r['data'], r['totale_casi'])
+                reg.add_case(r['data'], r['totale_casi'], r['totale_positivi'])
             else:
                 print("Error parsing regione " + r['denominazione_regione'])
                 quit()

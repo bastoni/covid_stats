@@ -1,6 +1,7 @@
 # Moving Average COVID-19 Data for Italian Province/Regioni
 
-Computes the moving average for the COVID cases (cases `x` days/population * 100000) of Italian Province and Regioni using official ISTAT population data and PCM-DPC COVID-19 data.
+Computes the moving average for the new COVID cases (new cases `x` days/population * 100000) of Italian Province and Regioni using official ISTAT population data and PCM-DPC COVID-19 data.
+For the regioni, also compute the moving average of the number of active cases (this number is not available on a provincia-basis).
 
 Optionally compute moving average of the COVID cases over the area of a provincia.
 
@@ -19,7 +20,8 @@ The program uses input data from [1], [2], and optionally [3]. Check the OFILE a
 ## Output
 
 Two json files (one for the province, one for the regioni) reporting for each analyzed range:
-- cases `x` days/population * 100000
+- new cases `x` days/population * 100000
+- Regioni only: active cases `x` days/population * 100000
 - total cases / population * 100000
 - total cases
 
@@ -30,6 +32,7 @@ e.g.,:
         "avg_pop": {
             "2020-02-24T18:00:00 - 2020-03-01T17:00:00": [
                 0.054722670431294536,
+                0.09850080677633016,
                 0.3830586930190618,
                 5
             ],
