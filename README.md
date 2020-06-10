@@ -16,6 +16,35 @@ mavg.py --help
 
 The program uses input data from [1], [2], and optionally [3]. Check the OFILE and IFILE dictionaries for the default locations of the input and output json/CSV files.
 
+## Output
+
+Two json files (one for the province, one for the regioni) reporting for each analyzed range:
+- cases `x` days/population * 100000
+- total cases / population * 100000
+- total cases
+
+e.g.,:
+```
+{
+    "Abruzzo": {
+        "avg_pop": {
+            "2020-02-24T18:00:00 - 2020-03-01T17:00:00": [
+                0.054722670431294536,
+                0.3830586930190618,
+                5
+            ],
+```
+
+For the province, if the `--area` option is specified, the number of cases `x` days/population * 100000 is also reported.
+
+e.g.,:
+```
+    "AG": {
+        "area": 3044.85,
+        "avg_area": {
+            "2020-02-24T18:00:00 - 2020-03-01T17:00:00": 0.0,
+```
+
 ## Data Sources
 - [1]: DEMO istat.it (November 2019 data) [ISTAT Italian Population](http://demo.istat.it/bilmens2019gen/index02.html). (Source data for the `tavola_bilancio_mensile_2019_*` files.)
 - [2]: [COVID-19 Data](https://github.com/pcm-dpc/COVID-19/)

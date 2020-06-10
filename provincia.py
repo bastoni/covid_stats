@@ -15,9 +15,9 @@ class Provincia(object):
         self.pop = int(pop)
         self.name = name
         self.case_by_date = {} # { date : cases }
-        self.avg_pop = {}  # { interval : (avg, max cases) }
+        self.avg_pop = {}  # { interval : (mavg, cases/pop*100000, max cases) }
         self.area = 0
-        self.avg_area = {} # { interval : avg }
+        self.avg_area = {} # { interval : mavg }
 
     def add_case(self, date, num):
         self.case_by_date[date] = num
@@ -64,7 +64,7 @@ class Provincia(object):
                 cur = float(avg_win / self.pop) * 100000
                 if (cur > prmax):
                     prmax = cur
-                self.avg_pop[rg] = (cur, m)
+                self.avg_pop[rg] = (cur, ((m/self.pop) * 100000), m)
                 if area:
                     cur_a = float(avg_win / self.area)
                     self.avg_area[rg] = cur_a
@@ -83,7 +83,7 @@ class Provincia(object):
             cur = float(avg_win / self.pop) * 100000
             if (cur > prmax):
                 prmax = cur
-            self.avg_pop[rg] = (cur, m)
+            self.avg_pop[rg] = (cur, ((m/self.pop) * 100000), m)
             if area:
                 cur_a = float(avg_win / self.area)
                 self.avg_area[rg] = cur_a

@@ -14,7 +14,7 @@ class Regione(object):
         self.pop = int(pop)
         self.name = name
         self.case_by_date = {} # { date : cases }
-        self.avg_pop = {}  # { interval : (avg, max cases) }
+        self.avg_pop = {}  # { interval : (mavg, cases/pop*100000, max cases) }
 
     def add_case(self, date, num):
         self.case_by_date[date] = num
@@ -51,7 +51,7 @@ class Regione(object):
                 cur = float(avg_win / self.pop) * 100000
                 if (cur > prmax):
                     prmax = cur
-                self.avg_pop[rg] = (cur, m)
+                self.avg_pop[rg] = (cur, ((m/self.pop) * 100000), m)
                 # print("%s: %s : %s %s %s" % (self.code, rg, avg_win, self.pop, self.avg_pop[rg]))
                 l = win.popleft()
                 win.append([d,c])
@@ -67,6 +67,6 @@ class Regione(object):
             cur = float(avg_win / self.pop) * 100000
             if (cur > prmax):
                 prmax = cur
-            self.avg_pop[rg] = (cur, m)
+            self.avg_pop[rg] = (cur, ((m/self.pop) * 100000), m)
 
         return prmax
