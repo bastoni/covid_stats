@@ -75,7 +75,7 @@ if args.verbose:
     print("Max cases/7days * 100000 pop per-provincia")
     print(sorted(provmax, key=lambda x: x[1]))
 
-with open(OFILE['avg_prov'], 'w') as f:
+with open(OFILE['avg_prov'], 'w+') as f:
     f.write(json.dumps(DBPROV, indent=4, sort_keys=True, cls=ProvinciaENC))
 
 # prime Regioni DB with population data
@@ -97,5 +97,5 @@ if args.verbose:
     print("Max cases/7days * 100000 pop per-regione")
     print(sorted(regmax, key=lambda x: x[1]))
 
-with open(OFILE['avg_reg'], 'w') as f:
+with open(OFILE['avg_reg'], 'w+') as f:
     f.write(json.dumps(DBREG, indent=4, sort_keys=True, cls=RegioneENC))

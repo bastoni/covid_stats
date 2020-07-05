@@ -3,6 +3,7 @@
 from provincia import *
 from regione import *
 from mapping import *
+import sys
 
 # COVID-19/dati-json/dpc-covid19-ita-province.json
 #[
@@ -29,9 +30,8 @@ def load_prov_case(infile, db):
             pr = db[p['sigla_provincia']]
             pr.add_case(p['data'], p['totale_casi'])
         except:
-            # print(p['sigla_provincia'] + ' not found', file=sys.stderr)
-            if (p['sigla_provincia'] != ""):
-                quit()
+            # print(str(p) + ' not found', file=sys.stderr)
+            None
 
 # COVID-19/dati-json/dpc-covid19-ita-regioni.json lines
 # [
