@@ -76,7 +76,7 @@ class Provincia(object):
                 win.append([d,c])
 
         if len(win) < avg:
-            print("Not enough data for avg of " + avg + " elements")
+            print("Not enough data for avg of " + str(avg) + " elements")
         else:
             # last element
             _max = self._avg(win, avg, area)
