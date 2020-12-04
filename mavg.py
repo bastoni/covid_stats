@@ -90,12 +90,12 @@ load_reg_case(IFILE['dpc_reg'], DBREG)
 
 regmax = []
 for k,v in sorted(DBREG.items()):
-    _max = v.do_avg(AVG)
-    regmax.append([k,_max])
+    (_max, mavg_active) = v.do_avg(AVG)
+    regmax.append([k,_max,mavg_active])
 
 if args.verbose:
-    print("Max cases/7days * 100000 pop per-regione")
-    print(sorted(regmax, key=lambda x: x[1]))
+    print("Averages (region, max, last active cases)")
+    print(sorted(regmax, key=lambda x: x[2]))
 
 with open(OFILE['avg_reg'], 'w+') as f:
     f.write(json.dumps(DBREG, indent=4, sort_keys=True, cls=RegioneENC))

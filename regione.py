@@ -76,4 +76,5 @@ class Regione(object):
             if (_max > prmax):
                 prmax = _max
 
-        return prmax
+        # (maximum new cases, last active average)
+        return (prmax, (mavg_active/self.pop * 100000))
