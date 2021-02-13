@@ -2,6 +2,7 @@
 # Copyright (C) 2020 Andrea Bastoni, License: Apache-2.0, see License file
 import csv
 import re
+from rp_item import *
 from provincia import *
 from regione import *
 from mapping import *
@@ -46,7 +47,36 @@ def load_istat_regioni(infile):
     csv_close(f)
     return reg_pop
 
+def load_regioni(infile):
+    d = {}
+    anum = re.compile("^[0-9]")
+    (spam, f) = csv_reader(infile, 'r', 2048)
+    anum = re.compile("^[0-9]")
+    for s in spam:
+        if anum.match(s[0]):
+            # code, name, population, area
+            el = RPItem(s[0], s[1], s[2], s[3])
+            d[el.code] = el
+    csv_close(f)
+    return d
+
+def load_province(infile):
+    d = {}
+    (spam, f) = csv_reader(infile, 'r', 2048)
+    anum = re.compile("^[0-9]")
+    for s in spam:
+        if anum.match(s[0]):
+            # code, name, population, area
+            el = RPItem(s[0], s[1], s[3], s[4])
+            d[el.code] = el
+    csv_close(f)
+    return d
+
 
 # test
+#d = load_regioni('./data/regioni.csv')
+#d = load_province('./data/province.csv')
+#for el in d.values():
+#    print(el)
 #load_istat_province('./tavola_bilancio_mensile_2019_province_tot.csv')
 #load_istat_regioni('./tavola_bilancio_mensile_2019_regioni_tot.csv')
