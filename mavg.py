@@ -50,7 +50,7 @@ if args.in_reg is not None:
 if args.out_reg is not None:
     OFILE['regione'] = args.out_reg
 if args.wsize is not None:
-    AVG = args.wsize
+    AVG = int(args.wsize)
 
 print('Infiles:\n%s' % ('\n'.join(str(k) + ' ' + str(v) for (k,v) in IFILE.items())))
 print('Outfile:\n%s' % ('\n'.join(str(k) + ' ' + str(v) for (k,v) in OFILE.items())))
