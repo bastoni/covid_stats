@@ -2,6 +2,7 @@
 # Copyright (C) 2021 Andrea Bastoni, License: Apache-2.0, see License file
 import json
 from collections import deque
+from datetime import datetime, timedelta
 
 class RPItemENC(json.JSONEncoder):
     def default(self, o):
@@ -116,6 +117,18 @@ class RPItem(object):
             reff = -1
         return (d, reff)
 
+    def _expd(self, wsum):
+        (now, tot) = self.S[-1]
+        (begin, _) = self.S[0]
+        expf = float(wsum / tot)
+        # When is the expected day from the beginning
+        b = datetime.fromisoformat(begin)
+        n = datetime.fromisoformat(now)
+        d = timedelta(days=int(expf))
+        expd = b + d
+        diff = expd - n
+        return (expf, expd.isoformat(), diff.days)
+
     def stat(self, W):
         win = deque([])
         exp = 0
@@ -136,13 +149,8 @@ class RPItem(object):
         self.avg_N.append(self._avg(win, W))
         self.sum_W.append(self._sum(win, W))
 
-        # average for expected value
-        (now , tot) = self.S[-1]
-        expf = float(exp / tot)
-        expd = int(expf)
-        (d, _) = self.S[expd]
-        # TODO: add value in that day + delta from today
-        self.exp = (now, d, expf)
+        # expexted value day
+        self.exp = self._expd(exp)
 
         # reff
         win = deque([])
