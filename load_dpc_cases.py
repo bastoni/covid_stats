@@ -1,8 +1,7 @@
 # vim: set fileencoding=utf-8 :
 # Copyright (C) 2020 Andrea Bastoni, License: Apache-2.0, see License file
-from provincia import *
-from regione import *
-from mapping import *
+from rp_item import *
+import json
 import sys
 
 # COVID-19/dati-json/dpc-covid19-ita-province.json
@@ -21,17 +20,6 @@ import sys
 #        "note_it": "",
 #        "note_en": ""
 #    },
-def load_prov_case(infile, db):
-    with open(infile, 'r') as f:
-        dpc = json.load(f)
-
-    for p in dpc:
-        try:
-            pr = db[p['sigla_provincia']]
-            pr.add_case(p['data'], p['totale_casi'])
-        except:
-            # print(str(p) + ' not found', file=sys.stderr)
-            None
 
 # COVID-19/dati-json/dpc-covid19-ita-regioni.json lines
 # [
@@ -57,18 +45,23 @@ def load_prov_case(infile, db):
 #         "note_it": "",
 #         "note_en": ""
 #     },
-def load_reg_case(infile, db):
+
+MAP = {
+        'provincia' : 'codice_provincia',
+        'regione'   : 'codice_regione',
+    }
+
+def load_case(infile, db, type):
     with open(infile, 'r') as f:
         dpc = json.load(f)
 
-    for r in dpc:
+    code = MAP[type]
+
+    for p in dpc:
         try:
-            reg = db[r['denominazione_regione']]
-            reg.add_case(r['data'], r['totale_casi'], r['totale_positivi'])
+            pr = db[p[code]]
+            pr.add_case(p['data'], p['totale_casi'])
         except:
-            if (MAP_REG[r['denominazione_regione']] != ""):
-                reg = db[MAP_REG[r['denominazione_regione']]]
-                reg.add_case(r['data'], r['totale_casi'], r['totale_positivi'])
-            else:
-                print("Error parsing regione " + r['denominazione_regione'])
-                quit()
+            # print(str(p) + ' not found', file=sys.stderr)
+            None
+
