@@ -24,6 +24,17 @@ def csv_reader(infile, mode, length):
 def csv_close(f):
     f.close()
 
+# ISTAT-based data
+def load_istat_regioni(infile):
+    reg_pop = {}
+    (spam, f) = csv_reader(infile, 'r', 2048)
+    anum = re.compile("^[0-9]")
+    for s in spam:
+        if anum.match(s[0]):
+            r = Regione(MAP_REG[s[1]], s[2])
+            reg_pop[r.name] = r
+    csv_close(f)
+    return reg_pop
 
 def load_istat_province(infile):
     prov = {}
@@ -36,42 +47,23 @@ def load_istat_province(infile):
     csv_close(f)
     return prov
 
-def load_istat_regioni(infile):
-    reg_pop = {}
-    (spam, f) = csv_reader(infile, 'r', 2048)
-    anum = re.compile("^[0-9]")
-    for s in spam:
-        if anum.match(s[0]):
-            r = Regione(MAP_REG[s[1]], s[2])
-            reg_pop[r.name] = r
-    csv_close(f)
-    return reg_pop
-
-def load_regioni(infile):
+# Load consolidated CSV data for regioni and province
+def load_data(infile, type):
     d = {}
     anum = re.compile("^[0-9]")
     (spam, f) = csv_reader(infile, 'r', 2048)
+    # Skip description lines
     anum = re.compile("^[0-9]")
     for s in spam:
         if anum.match(s[0]):
             # code, name, population, area
-            el = RPItem(s[0], s[1], s[2], s[3])
+            if type is 'provincia':
+                el = RPItem(s[0], s[1], s[3], s[4])
+            else:
+                el = RPItem(s[0], s[1], s[2], s[3])
             d[el.code] = el
     csv_close(f)
     return d
-
-def load_province(infile):
-    d = {}
-    (spam, f) = csv_reader(infile, 'r', 2048)
-    anum = re.compile("^[0-9]")
-    for s in spam:
-        if anum.match(s[0]):
-            # code, name, population, area
-            el = RPItem(s[0], s[1], s[3], s[4])
-            d[el.code] = el
-    csv_close(f)
-    return d
-
 
 # test
 #d = load_regioni('./data/regioni.csv')
