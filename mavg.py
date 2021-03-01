@@ -56,7 +56,7 @@ print('Infiles:\n%s' % ('\n'.join(str(k) + ' ' + str(v) for (k,v) in IFILE.items
 print('Outfile:\n%s' % ('\n'.join(str(k) + ' ' + str(v) for (k,v) in OFILE.items())))
 
 # interesting codes
-codes = [23, 30, 5, 6, 15, 36]
+codes = [23, 5, 6, 30, 21]
 
 for tp in ['provincia', 'regione']:
     # prime DB with population data

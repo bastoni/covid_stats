@@ -68,15 +68,15 @@ class RPItem(object):
         d['name'] = self.name
         d['exp'] = self.exp
         stat = {}
-        (t, x) = self.S[-1]
+        (t, x) = sorted(self.S)[-1]
         stat[t] = {}
         stat[t]['tot'] = x
-        (t, x) = self.avg_N[-1]
+        (t, x) = sorted(self.avg_N)[-1]
         stat[t]['avg_N'] = x
-        (t, x) = self.sum_W[-1]
+        (t, x) = sorted(self.sum_W)[-1]
         stat[t]['lastW_pop'] = float(x / self.pop) * 100000
         stat[t]['lastW_area'] = float(x / self.area)
-        (t, x) = self.reff[-1]
+        (t, x) = sorted(self.reff)[-1]
         stat[t]['reff'] = x
         d['stat'] = stat
         return d
